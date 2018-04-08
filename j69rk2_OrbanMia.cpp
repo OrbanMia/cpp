@@ -25,7 +25,7 @@ int az,kolesz, keres;
 char nev[30];
 
 //keresés függvény. Végignézi az adatbazist, és ha egyezést talál, akkor visszaadja az egyező adat indexét
-void kereses()
+int kereses()
   {
     /*for (int i = 0; i < 40; i++)
     {
@@ -36,7 +36,7 @@ void kereses()
     }
     return 40;*/
 
-    printf("Keresett azonosito: ");
+    printf("Azonosito: ");
     scanf("%d",&keres);
     //Az els� elemre �llunk
     aktualis=elso;
@@ -48,8 +48,8 @@ void kereses()
         {
             //Ha megtal�lta ki�rja az aktualis elem adatait �s kil�p a ciklusb�l
               printf("%d\t\t%s\t\t%d\n",aktualis->az, aktualis->nev, aktualis->kolesz);
-            //return aktualis->az;
-            break;
+              return 1;
+              break;
         }
         //ha nem tal�lta meg a k�vetkez� elemre l�p
         aktualis=aktualis->kovetkezo;
@@ -60,8 +60,7 @@ void kereses()
   }
 // az adatbázis minden elemét megvizsgálja, és ha nem 0 az azonosító,tehát szerepelnek benne adatok, akkor kiírja
 void adatmodositas(){
-  printf("Melyik adatot szeretned modositani? (azonosito)\n");
-  scanf("%d",&keres);
+  //printf("Melyik adatot szeretned modositani? (azonosito)\n");
   /*int az;
   fflush(stdin);
   scanf("%d", &az);
@@ -76,14 +75,16 @@ void adatmodositas(){
   scanf("%d", &adatbazis[i].kolesz);
   fflush(stdin);*/
 
-  kereses ();
-  printf("\nKerem a modositott nevet: ");
-  scanf("%s", nev);
-  strcpy(aktualis->nev,nev);
+  if (kereses () == 1 );
+    {
+      printf("\nKerem a modositott nevet: ");
+      scanf("%s", nev);
+      strcpy(aktualis->nev,nev);
 
-  printf("Kerem a koleszt: ");
-  scanf("%d", &kolesz);
-  aktualis->kolesz = kolesz;
+    printf("Kerem a koleszt: ");
+    scanf("%d", &kolesz);
+    aktualis->kolesz = kolesz;
+  }
 
   //aktualis=elso;
 
@@ -97,84 +98,83 @@ void adatmodositas(){
 // megnézi, hol van az első üresmező az adatbázisban, majd bekéri az adatokat, és elhelyezi az adatbázisba
 void kiir()
 {
-  /*for (int i = 0; i < 40 ; i++)
-  {
-  if (adatbazis[i].az != 0)
-  {
-  printf("%d\t\t%s\t\t%d\n", adatbazis[i].az, adatbazis[i].nev, adatbazis[i].kolesz);
-}
-}*/
+      /*for (int i = 0; i < 40 ; i++)
+      {
+      if (adatbazis[i].az != 0)
+      {
+      printf("%d\t\t%s\t\t%d\n", adatbazis[i].az, adatbazis[i].nev, adatbazis[i].kolesz);
+    }*/
 
-while(aktualis)
-{
-  //�rd ki az adatot
-  printf("%d\t\t%s\t\t%d\n",aktualis->az, aktualis->nev, aktualis->kolesz);
-  //L�pj a k�vetkez� elemre
-  aktualis=aktualis->kovetkezo;
-}
-//system("pause");
-//return 0;
+    while(aktualis)
+    {
+      //�rd ki az adatot
+      printf("%d\t\t%s\t\t%d\n",aktualis->az, aktualis->nev, aktualis->kolesz);
+      //L�pj a k�vetkez� elemre
+      aktualis=aktualis->kovetkezo;
+    }
+    //system("pause");
+    //return 0;
 
 
 
 }
 void torles()
 {
-  //bekérem az azonosítót, majd az adatokat kiírom a felhasználónak.
-  printf("Torles azonosito alapjan.\n");
-  printf("Azonosito megadasa: \n");
-  scanf("%d",&keres);
-  //int valasz;
-  //char talalat = kereses();
-  //if (i != 40) {
-  //printf("%s torlese az adatbazisbol\n", talalat);
-  printf("Biztosan torolni szeretned? [I/N]\n");
-  char val;
-  scanf("%s", &val);
-  //ha jóváhagyja a törlést, akkor a törlendő adat indexétől előrehozom eggyel az összes
-  //többi adatot, majd az utolsó adatot kitörlöm
-  if (val == 'i' || val == 'I')
-  {
-    printf("Torles\n");
-    /*for (int z = i; z < 39; z++)
-    {
-    adatbazis[z].az = adatbazis[z+1].az;
-    strcpy(adatbazis[z].nev, adatbazis[z+1].nev);
-    adatbazis[z].kolesz = adatbazis[z+1].kolesz;
-  }
-  adatbazis[39].az = 0;
-  strcpy(adatbazis[39].nev , "");
-  adatbazis[39].kolesz = 0;*/
-  aktualis=elso;
-  elozo=NULL;
-  while(aktualis)
-  {
-    if(keres==aktualis->az)
-    {
-      //Ha az el�z� null, vagyis az el�sz�r fut le a ciklus, vagyis az els� elemet keress�k: az els�, most m�r az els� ut�ni elem lesz
-      if (elozo==NULL) elso=aktualis->kovetkezo;
-      //ha nem az els� lefut�s, akkor az el�z� elemet �sszek�tj�k az aktu�lis ut�mi elemmel, vagyis az aktu�lis elemet kihagyjuk a l�ncb�l
-      else elozo->kovetkezo=aktualis->kovetkezo;
-      //felszabad�tjuk a mem�ri�ban annak az elemnek a hely�t, amit kiakartunk t�r�lni
-      free(aktualis);
-      /*printf("Meg kell kerdezni, hogy biztos-e a torlesben, mi azok vagyunk.\n");
-      printf("Sikeres torles.\n");*/
-      break;
+      //bekérem az azonosítót, majd az adatokat kiírom a felhasználónak.
+      printf("Torles azonosito alapjan.\n");
+      printf("Azonosito megadasa: \n");
+      scanf("%d",&keres);
+      //int valasz;
+      //char talalat = kereses();
+      //if (i != 40) {
+      //printf("%s torlese az adatbazisbol\n", talalat);
+      printf("Biztosan torolni szeretned? [I/N]\n");
+      char val;
+      scanf("%s", &val);
+      //ha jóváhagyja a törlést, akkor a törlendő adat indexétől előrehozom eggyel az összes
+      //többi adatot, majd az utolsó adatot kitörlöm
+      if (val == 'i' || val == 'I')
+      {
+        printf("Torles\n");
+        /*for (int z = i; z < 39; z++)
+        {
+        adatbazis[z].az = adatbazis[z+1].az;
+        strcpy(adatbazis[z].nev, adatbazis[z+1].nev);
+        adatbazis[z].kolesz = adatbazis[z+1].kolesz;
+      }
+      adatbazis[39].az = 0;
+      strcpy(adatbazis[39].nev , "");
+      adatbazis[39].kolesz = 0;*/
+      aktualis=elso;
+      elozo=NULL;
+      while(aktualis)
+      {
+        if(keres==aktualis->az)
+        {
+          //Ha az el�z� null, vagyis az el�sz�r fut le a ciklus, vagyis az els� elemet keress�k: az els�, most m�r az els� ut�ni elem lesz
+          if (elozo==NULL) elso=aktualis->kovetkezo;
+          //ha nem az els� lefut�s, akkor az el�z� elemet �sszek�tj�k az aktu�lis ut�mi elemmel, vagyis az aktu�lis elemet kihagyjuk a l�ncb�l
+          else elozo->kovetkezo=aktualis->kovetkezo;
+          //felszabad�tjuk a mem�ri�ban annak az elemnek a hely�t, amit kiakartunk t�r�lni
+          free(aktualis);
+          /*printf("Meg kell kerdezni, hogy biztos-e a torlesben, mi azok vagyunk.\n");
+          printf("Sikeres torles.\n");*/
+          break;
+        }
+        //az el�z� most m�r az aktu�lis lesz
+        elozo=aktualis;
+        //az aktu�llis pedig az aktu�lis ut�ni elem
+        aktualis=aktualis->kovetkezo;
+      }
+      if (aktualis==NULL) printf("Nincs ilyen elem.\n");
+
+
     }
-    //az el�z� most m�r az aktu�lis lesz
-    elozo=aktualis;
-    //az aktu�llis pedig az aktu�lis ut�ni elem
-    aktualis=aktualis->kovetkezo;
-  }
-  if (aktualis==NULL) printf("Nincs ilyen elem.\n");
-
-
-}
-else
-{
-  printf("Torles megszakitasa\n");
-}
-printf("A torles befejezodott\n");
+    else
+    {
+      printf("Torles megszakitasa\n");
+    }
+    printf("A torles befejezodott\n");
 }
 int kiolvas (){
 
@@ -270,7 +270,7 @@ void ujadat ()
       scanf("%s",nev);
       printf("Kerem a koleszt! ");
       scanf("%d",&kolesz);
-      while(az)
+      if(az)
       {
 
           uj=(struct rec*)malloc(sizeof(struct rec));
@@ -303,8 +303,14 @@ void ujadat ()
 
           uj->kovetkezo=aktualis;
 
-
-  }
+          /*printf("Kerek egy azonositot! ");
+          scanf("%d",&az);
+          printf("Kerem a nevet! ");
+          scanf("%s",nev);
+          printf("Kerem a koleszt! ");
+          scanf("%d",&kolesz);*/
+          }
+          else printf("Hibas azonosito!\n");
 }
 
   // bekérem az azonosítót, ami alapján megkeresem, hogy hol van a tömbben, a keres függvénnyel
@@ -372,7 +378,18 @@ int main()
               case 5: kiir ();
                       break;
               case 0: printf ("\nSzia!\n");
-                  	break;
+                      aktualis=elso;
+                      while(aktualis)
+                      {
+                        //itt nem kell & jel, mert ez m�r egy mutat� alapb�l
+                          fwrite(aktualis, sizeof(rec), 1, fp);
+                          aktualis=aktualis->kovetkezo;
+                      }
+
+                    //csak a v�g�n kell bez�rni a file-t!!!!!!!
+                      fclose(fp);
+                      exit(EXIT_SUCCESS);
+	                    break;
             }
           } while(valasz != 0);
         }
